@@ -11,6 +11,11 @@ import datetime # работа со временем
 # Задача для чтения данных из первой базы данных
 @task
 def extract():
+    db_host = Secret.load("db-host")
+    db_name = Secret.load("db-name")
+    db_user = Secret.load("db-user")
+    db_password = Secret.load("db-password")
+
     try:
         #пытаемся подключиться к базе
         conn_read = psycopg2.connect(dbname=db_name.get(), user=db_user.get(), password=db_password.get(), host=db_host.get(), port='6432')
@@ -39,6 +44,11 @@ def extract():
 # Задача для записи данных во вторую базу данных
 @task
 def load(rows):
+    db_host = Secret.load("db-host")
+    db_name = Secret.load("db-name")
+    db_user = Secret.load("db-user")
+    db_password = Secret.load("db-password")
+
     try:
         # Установка соединения со второй базой данных (запись)
         conn_write = psycopg2.connect(dbname=db_name.get(), user=db_user.get(), password=db_password.get(), host=db_host.get(), port='6432')
@@ -71,8 +81,4 @@ def etl():
     load(data)
     
 if __name__ == "__main__":
-    db_host = Secret.load("db-host")
-    db_name = Secret.load("db-name")
-    db_user = Secret.load("db-user")
-    db_password = Secret.load("db-password")
     etl()
