@@ -7,5 +7,7 @@ if __name__ == "__main__":
     ).deploy(
         name="etl-dwh-s",
         work_pool_name="my-managed-pool",
+        #job_variables={"pip_packages": ["pandas", "prefect-aws"]}
+        job_variables={"pip_packages": ["psycopg2-binary"]}
         cron="0 7 * * *",
     )
