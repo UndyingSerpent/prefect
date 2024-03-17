@@ -13,17 +13,20 @@ import datetime # работа со временем
 def extract():
     db_host = Secret.load("db-host")
     db_name = Secret.load("db-name")
+    db_name_write = Secret.load("db-name-load")
     db_user = Secret.load("db-user")
     db_password = Secret.load("db-password")
 
     try:
         #пытаемся подключиться к базе
+        conn_write = psycopg2.connect(dbname=db_name_write.get(), user=db_user.get(), password=db_password.get(), host=db_host.get(), port='6432')
+        cur_write = conn_read.cursor()
         conn_read = psycopg2.connect(dbname=db_name.get(), user=db_user.get(), password=db_password.get(), host=db_host.get(), port='6432')
         cur_read = conn_read.cursor()
         
         #получим дату последней загрузки
-        cur_read.execute("select max(rep.data_create_row) as maxdat from report_1 rep;")
-        rows = cur_read.fetchone()
+        cur_write.execute("select max(rep.data_create_row) as maxdat from report_1 rep;")
+        rows = cur_write.fetchone()
         print("Последняя загруженная дата - ", rows[0], "\n")
         last_load_date = rows
         
@@ -39,6 +42,9 @@ def extract():
         if conn_read:
             cur_read.close()
             conn_read.close()
+        if conn_write:
+            cur_write.close()
+            conn_write.close()
         return rows
     
 # Задача для записи данных во вторую базу данных
@@ -46,12 +52,13 @@ def extract():
 def load(rows):
     db_host = Secret.load("db-host")
     db_name = Secret.load("db-name")
+    db_name_write = Secret.load("db-name-load")
     db_user = Secret.load("db-user")
     db_password = Secret.load("db-password")
 
     try:
         # Установка соединения со второй базой данных (запись)
-        conn_write = psycopg2.connect(dbname=db_name.get(), user=db_user.get(), password=db_password.get(), host=db_host.get(), port='6432')
+        conn_write = psycopg2.connect(dbname=db_name_write.get(), user=db_user.get(), password=db_password.get(), host=db_host.get(), port='6432')
         cur_write = conn_write.cursor()
     
         # Начало транзакции для записи
