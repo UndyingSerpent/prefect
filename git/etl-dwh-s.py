@@ -31,7 +31,7 @@ def extract():
         last_load_date = rows
         
         #выберем новые записи для загрузки
-        cur_read.execute("select * from report_1 rep where rep.data_create_row = %s", last_load_date)
+        cur_read.execute("select * from report_1 rep where rep.data_create_row > %s", last_load_date)
         rows = cur_read.fetchall()
         print("Выбрано записей для заргузки - ", len(rows), "\n")
 
