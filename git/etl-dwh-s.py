@@ -20,7 +20,7 @@ def extract():
     try:
         #пытаемся подключиться к базе
         conn_write = psycopg2.connect(dbname=db_name_write.get(), user=db_user.get(), password=db_password.get(), host=db_host.get(), port='6432')
-        cur_write = conn_read.cursor()
+        cur_write = conn_write.cursor()
         conn_read = psycopg2.connect(dbname=db_name.get(), user=db_user.get(), password=db_password.get(), host=db_host.get(), port='6432')
         cur_read = conn_read.cursor()
         
