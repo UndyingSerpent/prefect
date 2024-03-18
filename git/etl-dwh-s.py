@@ -65,7 +65,7 @@ def load(rows):
         cur_write.execute("BEGIN")
     
         # Пакетная вставка записей во вторую таблицу
-        insert_query = "INSERT INTO report_t1 VALUES %s"
+        insert_query = "INSERT INTO report_1 VALUES %s"
         data_to_insert = [row for row in rows]
         execute_values(cur_write, insert_query, data_to_insert)
 
